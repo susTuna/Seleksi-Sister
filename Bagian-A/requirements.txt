@@ -1,8 +1,13 @@
+certifi==2025.7.14
 cffi==1.17.1
+charset-normalizer==3.4.2
 dotenv==0.9.9
+idna==3.10
 numexpr==2.11.0
 numpy==2.3.2
 pqcrypto==0.3.4
 pycparser==2.22
 pyotp==2.9.0
 python-dotenv==1.1.1
+requests==2.32.4
+urllib3==2.5.0
