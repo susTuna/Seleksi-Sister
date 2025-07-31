@@ -29,9 +29,10 @@ def activate_account(payload):
         )
         if response.status_code != 200:
             print(f"Server returned error: Status {response.status_code}")
-            print(f"Error details: {response.json()}")
+            print(f"Error details: {json.dumps(response.json(), indent=4)}")
         else:
-            print(f"Account activation successful: {response.json()}")
+            formatted_json = json.dumps(response.json(), indent=4)
+            print(f"Account activation successful:\n{formatted_json}")
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"Error activating account: {e}")
@@ -46,9 +47,10 @@ def stage_a_submit(payload, file):
 
         if response.status_code != 200:
             print(f"Server returned error: Status {response.status_code}")
-            print(f"Error details: {response.json()}")
+            print(f"Error details: {json.dumps(response.json(), indent=4)}")
         else:
-            print(f"Submission successful: {response.json()}")
+            formatted_json = json.dumps(response.json(), indent=4)
+            print(f"Submission successful:\n{formatted_json}")
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"Error submitting stage A: {e}")
@@ -63,13 +65,28 @@ def update_public_key(payload):
         response: HTTPResponse = conn.getresponse()
         data: bytes = response.read()
         
-        if response.status != 200:
-            error_info = json.loads(data.decode('utf-8'))
-            print(f"Server returned error: Status {response.status}")
-            print(f"Error details: {error_info}")
-            return error_info
-            
-        return json.loads(data.decode('utf-8'))
+        if response.status_code != 200:
+            print(f"Server returned error: Status {response.status_code}")
+            print(f"Error details: {json.dumps(response.json(), indent=4)}")
+        else:
+            formatted_json = json.dumps(response.json(), indent=4)
+            print(f"Public key updated successfully:\n{formatted_json}")
+        return response.json()
     except Exception as e:
         print(f"Error updating public key: {e}")
         return None
+    
+def get_submissions(user, payload):
+    try:
+        response = requests.get(
+            f"http://{URL}/user/{user}/submissions?totp_code={payload}", 
+        )
+        if response.status_code != 200:
+            print(f"Server returned error: Status {response.status_code}")
+            print(f"Error details: {json.dumps(response.json(), indent=4)}")
+        else:
+            formatted_json = json.dumps(response.json(), indent=4)
+            print(f"Submissions fetched successfully:\n{formatted_json}")
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching submissions: {e}")
