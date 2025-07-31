@@ -14,6 +14,7 @@ load_dotenv()
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Submit your solution")
     parser.add_argument("--file", "-f", type=str, required=True, help="Path to the file containing the solution")
+    parser.add_argument("--phase", "-p", type=int, required=True, help="Phase of the submission")
     args = parser.parse_args()
 
     if not os.path.exists(args.file):
@@ -77,7 +78,7 @@ if __name__ == "__main__":
         "math_question" : challenge,
         "math_answer" : result,
         "signature" : b64signature,
-        "tahap" : 1
+        "tahap" : args.phase
     }
 
     # Submit the payload

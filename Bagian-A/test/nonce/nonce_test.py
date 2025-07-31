@@ -1,6 +1,14 @@
 from src.nonce.nonce import Nonce
+import os
+from dotenv import load_dotenv
 
-N = Nonce("13523147:if:eldad", 5)
+load_dotenv()
+
+USERNAME = os.getenv("USERNAME")
+MAJOR = os.getenv("MAJOR")
+PASSWORD = os.getenv("PASSWORD")
+
+N = Nonce(f"{USERNAME}:{MAJOR}:{PASSWORD}", 5)
 N.create_hash()
 while not N.is_valid():
     N.generate_nonce()

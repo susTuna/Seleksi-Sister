@@ -9,6 +9,6 @@ load_dotenv()
 SECRET = os.getenv("TOTP_SECRET")
 
 def generate_totp():
-    totp = pyotp.TOTP(base64.b32encode(SECRET.encode('utf-8')))
+    totp = pyotp.TOTP(base64.b32encode(SECRET.encode()))
     current_totp = totp.now()
     return current_totp
