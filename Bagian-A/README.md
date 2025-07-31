@@ -1,5 +1,5 @@
 # HOW TO USE
-0. Clone this repository
+1. Clone this repository
 ```bash
 git clone https://github.com/susTuna/Seleksi-Sister.git
 ```
