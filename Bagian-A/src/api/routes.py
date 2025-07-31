@@ -21,6 +21,21 @@ def get_math():
         print(f"Error fetching math challenge: {e}")
         return None
     
+def activate_account(payload):
+    try:
+        response = requests.post(
+            f"http://{URL}/activate-account", 
+            json=payload
+        )
+        if response.status_code != 200:
+            print(f"Server returned error: Status {response.status_code}")
+            print(f"Error details: {response.json()}")
+        else:
+            print(f"Account activation successful: {response.json()}")
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error activating account: {e}")
+    
 def stage_a_submit(payload, file):
     try:
         response = requests.post(
