@@ -2,8 +2,9 @@ import subprocess
 
 def set_static(ip):
     try:
-        dhcp_command = f'nmcli con mod "Wired connection 1" ipv4.method manual ipv4.address {ip}/24'
-        subprocess.run(dhcp_command, shell=True, check=True)
+        dhcp_commands = [f'nmcli con mod "Wired connection 1" ipv4.address {ip}/24',
+                         'nmcli con mod "Wired connection 1" ipv4.method manual']
+        for command in dhcp_commands : subprocess.run(command, shell=True, check=True)
         print(f"Static IP set to {ip}")
     except subprocess.CalledProcessError as e:
         print(f"Failed to set static IP: {e}")
@@ -41,7 +42,7 @@ def curl():
         print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
-    choice = input("Choose an option:\n1. Set Static IP\n2. Enable DHCP\nEnter your choice (1/2): ")
+    choice = int(input("Choose an option:\n1. Set Static IP\n2. Enable DHCP\nEnter your choice (1/2): "))
     if choice == 1:
         ip = input("Enter the static IP address (Range 11.70.13.1 to 254): ")
         set_static(ip)
