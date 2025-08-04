@@ -1,4 +1,18 @@
-import subprocess
+import subprocess, sys, requests
+
+def conn(url):
+    print(f"Connecting to {url}...")
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            print("Connection successful")
+            print("Response:", response.text)
+        else:
+            print(f"Failed to connect, status code: {response.status_code}")
+    except requests.RequestException as e:
+        print(f"An error occurred while connecting: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 def set_static(ip):
     try:
@@ -49,4 +63,4 @@ if __name__ == "__main__":
     else:
         set_dhcp()
     restart_network()
-    curl()
+    conn("http://mio.deusexmachina.tech")
