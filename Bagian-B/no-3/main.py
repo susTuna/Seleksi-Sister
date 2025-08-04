@@ -17,6 +17,8 @@ def conn(url):
 def set_static(ip):
     try:
         dhcp_commands = [f'nmcli con mod "Wired connection 1" ipv4.address {ip}/24',
+                         'nmcli con mod "Wired connection 1" ipv4.gateway 11.70.13.0',
+                            'nmcli con mod "Wired connection 1" ipv4.dns 11.70.13.11',
                          'nmcli con mod "Wired connection 1" ipv4.method manual']
         for command in dhcp_commands : subprocess.run(command, shell=True, check=True)
         print(f"Static IP set to {ip}")
