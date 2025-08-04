@@ -29,7 +29,7 @@ def set_static(ip):
 
 def set_dhcp():
     try:
-        dhcp_command = 'nmcli con mod "Wired connection 1" ipv4.method auto ipv4.address "" ipv4.gateway "" ipv4.dns "11.70.13.11"'
+        dhcp_command = 'nmcli con mod "Wired connection 1" ipv4.method auto ipv4.address "" ipv4.gateway "" ipv4.dns 11.70.13.11'
         subprocess.run(dhcp_command, shell=True, check=True)
         print("DHCP enabled")
     except subprocess.CalledProcessError as e:
