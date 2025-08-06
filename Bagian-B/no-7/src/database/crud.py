@@ -108,16 +108,19 @@ def revoke_token_by_date(db: Session, date: datetime):
 def get_client(db: Session, client_id: str):
     return db.query(models.Client).filter(models.Client.client_id == client_id).first()
 
-def get_token(db: Session, client_id: int):
-    return db.query(models.AccessToken.token).filter(
-        models.AccessToken.client_id == client_id,
-        models.AccessToken.is_revoked == False
+def get_token(db: Session, token: str) -> models.AccessToken:
+    access_token = db.query(models.AccessToken).filter(
+        models.AccessToken.token == token
         ).first()
+    if access_token and access_token.expires_at:
+        if access_token.expires_at.tzinfo is None:
+            access_token.expires_at = access_token.expires_at.replace(tzinfo=ZoneInfo('Asia/Jakarta'))
+    return access_token
 
 def get_word_list(db: Session):
-    return db.query(models.WordList.description).all()
+    return db.query(models.WordList).first()
 
 def get_custom_word_list(db: Session, client_id: str):
-    return db.query(models.CustomWordList.blacklist, models.CustomWordList.whitelist).filter(
+    return db.query(models.CustomWordList).filter(
         models.CustomWordList.client_id == client_id
     ).first()

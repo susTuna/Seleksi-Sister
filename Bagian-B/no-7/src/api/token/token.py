@@ -1,7 +1,7 @@
 from database.database import SessionLocal
 from database.schemas import AccessTokenCreate
-from database.crud import create_token, get_client
-from fastapi import APIRouter, HTTPException, status, Header
+from database.crud import create_token, get_client, get_token
+from fastapi import APIRouter, HTTPException, status, Header, Depends
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 import bcrypt
@@ -18,7 +18,7 @@ class TokenRequest(BaseModel):
     grant_type: str
 
 @router.post("/oauth/token")
-async def get_token(request: TokenRequest, authorization: str = Header(None)):
+async def issue_token(request: TokenRequest, authorization: str = Header(None)):
     print(f"Received request: {request}, Authorization: {authorization}")
     if request.grant_type != "client_credentials":
         raise HTTPException(
@@ -73,3 +73,35 @@ async def get_token(request: TokenRequest, authorization: str = Header(None)):
     finally:
         db.close()
         
+async def get_current_client(token: str = Depends(oauth2_scheme)):
+    db = SessionLocal()
+    try:
+        access_token = get_token(db, token)
+        if not access_token:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token",
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        elif access_token.is_revoked:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token revoked",
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        elif access_token.expires_at < datetime.now(ZoneInfo('Asia/Jakarta')):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token expired",
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        client = get_client(db, access_token.client_id)
+        if not client:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Client not found",
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        return client
+    finally:
+        db.close()
