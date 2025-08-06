@@ -30,11 +30,11 @@ def generate_id_p1(msg: str, key: str) -> str:
     for i in range(len(msg)):
         char = msg[i]
         if char.isupper():
-            id.append(chr((ord(char) + ord(key[i])) - 2 * ord('A')) % 26 + ord('A'))
+            id.append(chr((ord(char) + ord(key[i]) - 2 * ord('A')) % 26 + ord('A')))
         elif char.islower():
-            id.append(chr((ord(char) + ord(key[i])) - 2 * ord('a')) % 26 + ord('a'))
+            id.append(chr((ord(char) + ord(key[i]) - 2 * ord('a')) % 26 + ord('a')))
         elif char.isdigit():
-            id.append(chr((ord(char) + ord(key[i])) - 2 * ord('0')) % 10 + ord('0'))
+            id.append(chr((ord(char) + ord(key[i]) - 2 * ord('0')) % 10 + ord('0')))
         else:
             id.append(char)
     return ''.join(id)
