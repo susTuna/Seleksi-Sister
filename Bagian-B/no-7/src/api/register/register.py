@@ -3,7 +3,7 @@ from database.models import Client
 from database.schemas import ClientCreate
 from database.crud import create_client
 from auth.secret import generate_password, generate_id
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, constr
 from typing import Optional
 import bcrypt
@@ -24,7 +24,7 @@ async def register_client(client_data: ClientCreation):
     db = SessionLocal()
     try:
         if db.query(Client).filter(Client.name == client_data.name).first():
-            raise HTTPException(status_code=400, detail="Client already exists")
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Client already exists")
         password = generate_password(client_data)
         client_id = generate_id(client_data)
         hashed_password = hash_password(password)
@@ -40,7 +40,3 @@ async def register_client(client_data: ClientCreation):
         return { "message": "Application registered successfully", "Client ID": client_id, "Secret": password }
     finally:
         db.close()
-
-
-
-
