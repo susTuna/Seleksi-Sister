@@ -20,6 +20,12 @@ class Client(ClientBase):
     class Config:
         orm_mode = True
 
+class ClientRegister(ClientBase):
+    uri: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
 class AccessTokenBase(BaseModel):
     client_id: int
     token: str

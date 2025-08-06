@@ -103,6 +103,9 @@ def revoke_token_by_date(db: Session, date: datetime):
     db.commit()
     return db_tokens
 
+def get_client(db: Session, name: str):
+    return db.query(models.Client).filter(models.Client.name == name).first()
+
 def get_token(db: Session, client_id: int):
     return db.query(models.AccessToken.token).filter(
         models.AccessToken.client_id == client_id,

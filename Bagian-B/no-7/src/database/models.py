@@ -6,7 +6,7 @@ class Client(Base):
     __tablename__ = 'clients'
 
     client_id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    name = Column(String, unique=True, nullable=False)
     email = Column(String, nullable=False)
     uri = Column(String, nullable=True)
     secret = Column(Text, nullable=False)
