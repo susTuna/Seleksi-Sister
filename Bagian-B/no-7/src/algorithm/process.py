@@ -6,12 +6,6 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import List, Dict, Set, Tuple
 from algorithm.regex import word_to_regex_pattern
 
-list1 = ['kontol', 'memek', 'anjing', 'babi', 'monyet']
-whitelist = ['babi', 'monyet']
-blacklist = ['tolol', 'jancuk']
-
-ulist = list(set(list1) - set(whitelist) | set(blacklist)) 
-
 class VeritasShield:
     def __init__(self, chunk_size: int = 100000, max_workers: int = None):
         self.chunk_size = chunk_size
