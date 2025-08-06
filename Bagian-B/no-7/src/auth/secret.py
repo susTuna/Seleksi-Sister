@@ -42,7 +42,7 @@ def generate_id_p1(msg: str, key: str) -> str:
 def generate_id(client: ClientRegister) -> str:
     msg = concat_secret(client.name, client.email, client.uri)
     key = base64.b64encode(msg[:9].encode()).decode()
-    return generate_id_p1(msg, key)
+    return base64.b64encode(generate_id_p1(msg, key).encode()).decode()
 
 def fun_roulette() -> int:
     return randint(1,6)
