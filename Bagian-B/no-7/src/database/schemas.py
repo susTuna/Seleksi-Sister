@@ -7,11 +7,12 @@ class ClientBase(BaseModel):
     email: str
 
 class ClientCreate(ClientBase):
+    client_id: str
     secret: str
     uri: Optional[str] = None
 
 class Client(ClientBase):
-    client_id: int
+    client_id: str
     uri: Optional[str] = None
     secret: str
     created_at: datetime
@@ -27,7 +28,7 @@ class ClientRegister(ClientBase):
         from_attributes = True
 
 class AccessTokenBase(BaseModel):
-    client_id: int
+    client_id: str
     token: str
 
 class AccessTokenCreate(AccessTokenBase):
@@ -44,7 +45,7 @@ class AccessToken(AccessTokenBase):
         orm_mode = True
 
 class CustomWordListBase(BaseModel):
-    client_id: int
+    client_id: str
     whitelist: str
     blacklist: str
 
@@ -75,7 +76,7 @@ class WordList(WordListBase):
         orm_mode = True
 
 class UsageLogBase(BaseModel):
-    client_id: int
+    client_id: str
     endpoint: str
     timestamp: datetime
     size: int

@@ -5,7 +5,8 @@ from database.database import Base
 class Client(Base):
     __tablename__ = 'clients'
 
-    client_id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, unique=True, index=True, autoincrement=True)
+    client_id = Column(String, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False)
     email = Column(String, nullable=False)
     uri = Column(String, nullable=True)
@@ -13,11 +14,15 @@ class Client(Base):
     created_at = Column(DateTime, nullable=False)
     is_active = Column(Boolean, default=True)
 
+    access_tokens = relationship("AccessToken", back_populates="client")
+    custom_word_lists = relationship("CustomWordList", back_populates="client")
+    usage_logs = relationship("UsageLog", back_populates="client")
+
 class AccessToken(Base):
     __tablename__ = 'access_tokens'
 
     token_id = Column(Integer, primary_key=True, index=True)
-    client_id = Column(Integer, ForeignKey('clients.client_id'), nullable=False)
+    client_id = Column(String, ForeignKey('clients.client_id'), nullable=False)
     token = Column(Text, nullable=False)
     issued_at = Column(DateTime, nullable=False)
     expires_at = Column(DateTime, nullable=False)
@@ -29,7 +34,7 @@ class CustomWordList(Base):
     __tablename__ = 'custom_word_lists'
 
     list_id = Column(Integer, primary_key=True, index=True)
-    client_id = Column(Integer, ForeignKey('clients.client_id'), nullable=False)
+    client_id = Column(String, ForeignKey('clients.client_id'), nullable=False)
     whitelist = Column(Text, nullable=False)
     blacklist = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False)
@@ -50,7 +55,7 @@ class UsageLog(Base):
     __tablename__ = 'usage_logs'
 
     log_id = Column(Integer, primary_key=True, index=True)
-    client_id = Column(Integer, ForeignKey('clients.client_id'), nullable=False)
+    client_id = Column(String, ForeignKey('clients.client_id'), nullable=False)
     endpoint = Column(String, nullable=False)
     timestamp = Column(DateTime, nullable=False)
     size = Column(Integer, nullable=False)
