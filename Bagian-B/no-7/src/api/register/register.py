@@ -3,6 +3,7 @@ from database.models import Client
 from database.schemas import ClientCreate
 from database.crud import create_client
 from auth.secret import generate_password, generate_id
+from algorithm.regex import email_validator
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, constr
 from typing import Optional
@@ -50,8 +51,3 @@ async def register_client(client_data: ClientCreation):
         return { "message": "Application registered successfully", "Client ID": client_id, "Secret": password }
     finally:
         db.close()
-
-def email_validator(email: str) -> bool:
-    import re
-    email_regex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
-    return re.match(email_regex, email) is not None
