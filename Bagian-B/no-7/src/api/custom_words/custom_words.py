@@ -90,16 +90,5 @@ async def update_cword(request: CWordRequest, authorization: str = Header(None),
         update_custom_word_list(db, client.client_id, custom_words_list)
         log_usage(client.client_id, "/custom-words", size, True)
         return { "message" : "Success"}
-    except HTTPException as he:
-        size = len(request.json().encode()) if request.json() else 0
-        log_usage(client.client_id, "/custom-words", size, False, str(he.detail))
-        raise he
-    except Exception as e:
-        size = len(request.json().encode()) if request.json() else 0
-        log_usage(client.client_id, "/custom-words", size, False, str(e))
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred"
-        )
     finally:
         db.close()

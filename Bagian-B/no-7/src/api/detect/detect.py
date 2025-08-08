@@ -49,24 +49,6 @@ async def detect_text(request: DetectRequest, authorization: str = Header(None),
             return {"isProfane" : False, "message": "No sensitive words detected"}
         
         return {"isProfane" : True, "detected_words": detected_words}
-    except HTTPException as he:
-        log_usage(client.client_id,
-                  "/detect",
-                  len(request.text.encode()) if request.text else 0,
-                  False,
-                  str(he.detail)
-        )
-        raise he
-    except Exception as e:
-        log_usage(client.client_id,
-                  "/detect",
-                  len(request.text.encode()) if request.text else 0,
-                  False,
-                  str(e)
-        )
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error occurred while processing the request"
-        )
+
     finally:
         db.close()
