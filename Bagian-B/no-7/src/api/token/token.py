@@ -1,6 +1,7 @@
 from database.database import SessionLocal
 from database.schemas import AccessTokenCreate
 from database.crud import create_token, get_client, get_token
+from auth.oauth import oauth
 from fastapi import APIRouter, HTTPException, status, Header, Depends
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
@@ -25,12 +26,7 @@ async def issue_token(request: TokenRequest, authorization: str = Header(None)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid grant type"
         )
-    if not authorization or not authorization.startswith("Basic "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing or invalid authorization header",
-            headers={"WWW-Authenticate": "Basic"}
-        )
+    oauth(authorization)
     try:
         credentials = base64.b64decode(authorization[6:]).decode()
         client_id, client_secret = credentials.split(":")
