@@ -1,26 +1,36 @@
 version: '3.8'
 
 services:
-  veritas-shield:
-    build: .
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db/veritasshield
-    volumes:
-      - ./src:/app/
-    restart: always
   db:
-    image: postgres:14
+    image: postgres:17.5
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - ./src/database/database.sql:/docker-entrypoint-initdb.d/database.sql
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=veritasshield
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  veritas-shield:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db/veritasshield
+      - BKEY=sugmadik
+      - BSALT=ligmaballs
+      - BPERSON=deeznuts
+    volumes:
+      - ./src:/app/
+    restart: always
 volumes:
   postgres_data:

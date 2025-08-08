@@ -16,7 +16,7 @@ cache = TTLCache(maxsize=1000, ttl=60)  # Cache for 1 minute
 
 async def rate_limiter(request: Request, client: str = Depends(get_current_client)):
     client_id = client.client_id
-    path = request.url_path
+    path = request.url.path
     limit_config = RATE_LIMIT.get(path, RATE_LIMIT["default"])
     max_calls = limit_config["calls"]
     period = limit_config["period"]
