@@ -60,7 +60,7 @@ def curl():
 if __name__ == "__main__":
     choice = int(input("Choose an option:\n1. Set Static IP\n2. Enable DHCP\nEnter your choice (1/2): "))
     if choice == 1:
-        ip = input("Enter the static IP address (Range 11.70.13.1 to 254): ")
+        ip = input("Enter the static IP address (Range 11.70.13.2 to 254): ")
         set_static(ip)
     else:
         set_dhcp()
