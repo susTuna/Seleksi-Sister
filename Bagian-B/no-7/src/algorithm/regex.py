@@ -46,5 +46,5 @@ def word_to_regex_pattern(word):
 
 def email_validator(email: str) -> bool:
     import re
-    email_regex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
+    email_regex = r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$'
     return re.match(email_regex, email) is not None
