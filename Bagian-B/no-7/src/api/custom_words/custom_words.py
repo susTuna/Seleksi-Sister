@@ -1,7 +1,7 @@
 from database.database import SessionLocal
 from database.crud import get_custom_word_list, create_custom_word_list, update_custom_word_list
 from database.schemas import CustomWordListCreate
-from api.token.token import get_current_client
+from utils.ratelimit import rate_limiter
 from auth.oauth import oauth
 from utils.logger import log_usage
 from fastapi import APIRouter, HTTPException, status, Header, Depends
@@ -15,7 +15,7 @@ class CWordRequest(BaseModel):
     words : str
 
 @router.post('/custom-words')
-async def update_cword(request: CWordRequest, authorization: str = Header(None), client: str = Depends(get_current_client)):
+async def update_cword(request: CWordRequest, authorization: str = Header(None), client: str = Depends(rate_limiter)):
     oauth(authorization)
     db = SessionLocal()
     try:

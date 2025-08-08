@@ -1,6 +1,6 @@
 from database.database import SessionLocal
 from database.crud import get_word_list, get_custom_word_list
-from api.token.token import get_current_client
+from utils.ratelimit import rate_limiter
 from algorithm.process import VeritasShield
 from auth.oauth import oauth
 from utils.logger import log_usage
@@ -15,7 +15,7 @@ class DetectRequest(BaseModel):
 WORD_LIST = get_word_list(SessionLocal())
 
 @router.post("/detect")
-async def detect_text(request: DetectRequest, authorization: str = Header(None), client: str = Depends(get_current_client)):
+async def detect_text(request: DetectRequest, authorization: str = Header(None), client: str = Depends(rate_limiter)):
     oauth(authorization)
     db = SessionLocal()
     try:
