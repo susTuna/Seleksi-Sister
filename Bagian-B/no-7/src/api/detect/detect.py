@@ -2,6 +2,7 @@ from database.database import SessionLocal
 from database.crud import get_word_list, get_custom_word_list
 from api.token.token import get_current_client
 from algorithm.process import VeritasShield
+from auth.oauth import oauth
 from fastapi import APIRouter, HTTPException, status, Header, Depends
 from pydantic import BaseModel
 
@@ -14,14 +15,14 @@ WORD_LIST = get_word_list(SessionLocal())
 
 @router.post("/detect")
 async def detect_text(request: DetectRequest, authorization: str = Header(None), client: str = Depends(get_current_client)):
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing or invalid authorization header",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
+    oauth(authorization)
     db = SessionLocal()
     try:
+        if not request.text:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Text field is required"
+            )
         custom_word_list = get_custom_word_list(db, client.client_id)
         word_list = (WORD_LIST.description.split(', '))
         if custom_word_list:
