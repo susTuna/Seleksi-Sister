@@ -13,7 +13,7 @@ async def add_rate_limit_headers(request: Request, call_next):
     response = await call_next(request)
     if hasattr(request.state, 'rate_limit_headers'):
         for key, value in request.state.rate_limit_headers.items():
-            response.header[key] = value
+            response.headers[key] = value
     return response
 
 app.include_router(register_router)

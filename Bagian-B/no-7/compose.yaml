@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  veritas-shield:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db/veritasshield
+    volumes:
+      - ./src:/app/
+    restart: always
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=veritasshield
+    ports:
+      - "5432:5432"
+volumes:
+  postgres_data:
