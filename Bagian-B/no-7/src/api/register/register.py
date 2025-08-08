@@ -23,7 +23,17 @@ def hash_password(password: str) -> str:
 async def register_client(client_data: ClientCreation):
     db = SessionLocal()
     try:
-        if db.query(Client).filter(Client.name == client_data.name).first():
+        if not client_data.name or not client_data.email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Name and email are required"
+            )
+        elif not email_validator(client_data.email):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid email format"
+            )
+        elif db.query(Client).filter(Client.name == client_data.name).first():
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Client already exists")
         password = generate_password(client_data)
         client_id = generate_id(client_data)
@@ -40,3 +50,8 @@ async def register_client(client_data: ClientCreation):
         return { "message": "Application registered successfully", "Client ID": client_id, "Secret": password }
     finally:
         db.close()
+
+def email_validator(email: str) -> bool:
+    import re
+    email_regex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
+    return re.match(email_regex, email) is not None
