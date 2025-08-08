@@ -8,7 +8,7 @@ import asyncio
 
 app = FastAPI()
 
-@app.middlewre("http")
+@app.middleware("http")
 async def add_rate_limit_headers(request: Request, call_next):
     response = await call_next(request)
     if hasattr(request.state, 'rate_limit_headers'):
