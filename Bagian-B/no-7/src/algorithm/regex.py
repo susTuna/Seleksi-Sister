@@ -3,7 +3,7 @@ import re
 LETTER_PATTERNS = {
     'a': '[aA4@]',
     'b': '[bB8]',
-    'c': '[cC\(]',
+    'c': '[cC\\(]',
     'd': '[dD]',
     'e': '[eE3€]',
     'f': '[fF]',
@@ -24,7 +24,7 @@ LETTER_PATTERNS = {
     'u': '[uU]',
     'v': '[vV]',
     'w': '[wW]',
-    'x': '[xX\*]',
+    'x': '[xX\\*]',
     'y': '[yY]',
     'z': '[zZ2]',
     # Non-letter characters
@@ -43,3 +43,8 @@ def word_to_regex_pattern(word):
         else:
             pattern += re.escape(char)
     return pattern
+
+def email_validator(email: str) -> bool:
+    import re
+    email_regex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
+    return re.match(email_regex, email) is not None

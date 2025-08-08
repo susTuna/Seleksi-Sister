@@ -20,7 +20,6 @@ class TokenRequest(BaseModel):
 
 @router.post("/oauth/token")
 async def issue_token(request: TokenRequest, authorization: str = Header(None)):
-    print(f"Received request: {request}, Authorization: {authorization}")
     if request.grant_type != "client_credentials":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
