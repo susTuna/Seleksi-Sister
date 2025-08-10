@@ -29,16 +29,19 @@ FIBITMAP* renderTile(int tile_x_index, int tile_y_index,
                 int tile_width, int tile_height,
                 int image_width, int image_height,
                 int maxIterations) {
-    FIBITMAP* bitmap = FreeImage_Allocate(tile_width, tile_height, 24);
+    int actual_width = min(tile_width, image_width - tile_x_index * tile_width);
+    int actual_height = min(tile_height, image_height - tile_y_index * tile_height);
+    FIBITMAP* bitmap = FreeImage_Allocate(actual_width, actual_height, 24);
     if (!bitmap) throw runtime_error("Failed to allocate image bitmap");
 
     auto palette = createPalette(maxIterations);
     
-    for (int y = 0; y < tile_height; ++y) {
-        for (int x = 0; x < tile_width; ++x) {
+    for (int y = 0; y < actual_height; ++y) {
+        for (int x = 0; x < actual_width; ++x) {
             int global_x = tile_x_index * tile_width + x;
             int global_y = tile_y_index * tile_height + y;
 
+            if (global_x >= image_width || global_y >= image_height) continue;
             double real = MIN_REAL + (static_cast<double>(global_x) / image_width) * (MAX_REAL - MIN_REAL);
             double imag = MIN_IMAG + (static_cast<double>(global_y) / image_height) * (MAX_IMAG - MIN_IMAG);
 
@@ -105,7 +108,19 @@ void renderParallel(int width, int height, int maxIterations,
                 cerr << "Failed to retreive bitmap." << endl;
                 continue;
             }
-            FreeImage_Paste(final_bitmap, tile_bitmap, tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, 255);
+            int actual_width = FreeImage_GetWidth(tile_bitmap);
+            int actual_height = FreeImage_GetHeight(tile_bitmap);
+            for (int y = 0; y < actual_height; ++y) {
+                for (int x = 0; x < actual_width; ++x) {
+                    int dest_x = tile_x * TILE_WIDTH + x;
+                    int dest_y = tile_y * TILE_HEIGHT + y;
+                    if (dest_x >= width || dest_y >= height) continue;
+                    RGBQUAD color;
+                    FreeImage_GetPixelColor(tile_bitmap, x, y, &color);
+                    FreeImage_SetPixelColor(final_bitmap, dest_x, dest_y, &color);
+                }
+            }
+            //FreeImage_Paste(final_bitmap, tile_bitmap, tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, 255);
             FreeImage_Unload(tile_bitmap);
         }
     }
