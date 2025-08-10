@@ -8,23 +8,34 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <future>
 #include <cmath>
 
 typedef struct Color {
     BYTE r, g, b;
 };
 
+#define TILE_WIDTH 1024 //px
+#define TILE_HEIGHT 1024 //px
+
+const long double MIN_REAL = -2.5;
+const long double MAX_REAL = 1.0;
+const long double MIN_IMAG = -1.5;
+const long double MAX_IMAG = 1.5;
+
 void renderSerial(int width, int height, int maxIterations,
-                  const std::string& filename);
+                  const std::string& filename, FREE_IMAGE_FORMAT format = FIF_PNG);
 
 void renderParallel(int width, int height, int maxIterations,
-                    const std::string& filename);
+                    const std::string& filename, FREE_IMAGE_FORMAT format = FIF_PNG);
 
-void renderTile(int tile_x_index, int tile_y_index,
+FIBITMAP* renderTile(int tile_x_index, int tile_y_index,
                 int tile_width, int tile_height,
                 int image_width, int image_height,
-                int maxIterations, const std::string& filename);
+                int maxIterations);
 
 std::vector<Color> createPalette(int size);
+
+bool saveImage(const FREE_IMAGE_FORMAT format, FIBITMAP* bitmap, const std::string& filename);
 
 #endif // __IMAGEUTIL_HPP__

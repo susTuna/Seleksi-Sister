@@ -3,7 +3,7 @@
 
 #include <complex>
 
-struct MandelbrotResult {
+typedef struct MandelbrotResult {
     int iterations;
 };
 
