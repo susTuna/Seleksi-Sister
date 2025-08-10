@@ -59,8 +59,7 @@ FIBITMAP* renderTile(int tile_x_index, int tile_y_index,
     return bitmap;
 }
 
-void renderSerial(int width, int height, int maxIterations,
-                  const string& filename, FREE_IMAGE_FORMAT format) {
+FIBITMAP* renderSerial(int width, int height, int maxIterations) {
     FIBITMAP* bitmap = FreeImage_Allocate(width, height, 24);
     if (!bitmap) throw runtime_error("Failed to allocate image bitmap");
 
@@ -79,11 +78,10 @@ void renderSerial(int width, int height, int maxIterations,
             }
         }
     }
-    saveImage(format, bitmap, filename);
+    return bitmap;
 }
 
-void renderParallel(int width, int height, int maxIterations,
-                    const string& filename, FREE_IMAGE_FORMAT format) {
+FIBITMAP* renderParallel(int width, int height, int maxIterations) {
     int num_tiles_x = ceil(static_cast<double>(width) / TILE_WIDTH);
     int num_tiles_y = ceil(static_cast<double>(height) / TILE_HEIGHT);
 
@@ -124,5 +122,5 @@ void renderParallel(int width, int height, int maxIterations,
             FreeImage_Unload(tile_bitmap);
         }
     }
-    saveImage(format, final_bitmap, filename);
+    return final_bitmap;
 }

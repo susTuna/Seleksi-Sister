@@ -23,11 +23,9 @@ const long double MAX_REAL = 1.0;
 const long double MIN_IMAG = -1.5;
 const long double MAX_IMAG = 1.5;
 
-void renderSerial(int width, int height, int maxIterations,
-                  const std::string& filename, FREE_IMAGE_FORMAT format = FIF_PNG);
+FIBITMAP* renderSerial(int width, int height, int maxIterations);
 
-void renderParallel(int width, int height, int maxIterations,
-                    const std::string& filename, FREE_IMAGE_FORMAT format = FIF_PNG);
+FIBITMAP* renderParallel(int width, int height, int maxIterations);
 
 FIBITMAP* renderTile(int tile_x_index, int tile_y_index,
                 int tile_width, int tile_height,
