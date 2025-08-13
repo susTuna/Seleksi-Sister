@@ -31,7 +31,7 @@ services:
       - BPERSON=deeznuts
       - API_SECRET=J3qwg-Qzy0qRVe7ZSy4v9MYGybsun9YQF1gmSn7ngBA
       - API_ID=AK7vuotWp153OWm4yrUVjQ
-      - PDF_URL=http://http://20.2.138.242:8000/
+      - PDF_URL=http://20.2.138.242:8000/
     volumes:
       - ./src:/app/
     restart: always
