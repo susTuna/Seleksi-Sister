@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from api.register.register import router as register_router
 from api.token.token import router as token_router
 from api.detect.detect import router as detect_router
+from api.detect_pdf.detect_pdf import router as detect_pdf_router
 from api.custom_words.custom_words import router as custom_words_router
 from auth.oauth import revoke
 import asyncio
@@ -20,6 +21,7 @@ app.include_router(register_router)
 app.include_router(token_router)
 app.include_router(detect_router)   
 app.include_router(custom_words_router)
+app.include_router(detect_pdf_router)
 
 async def revoke_expired_tokens_task():
     while True:
