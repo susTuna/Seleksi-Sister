@@ -55,6 +55,23 @@ def stage_a_submit(payload, file):
     except requests.exceptions.RequestException as e:
         print(f"Error submitting stage A: {e}")
 
+def stage_b_submit(payload, query):
+    try:
+        response = requests.post(
+            f"http://{URL}/stage-b/submit?username={query}", 
+            data=payload,
+        )
+
+        if response.status_code != 200:
+            print(f"Server returned error: Status {response.status_code}")
+            print(f"Error details: {json.dumps(response.json(), indent=4)}")
+        else:
+            formatted_json = json.dumps(response.json(), indent=4)
+            print(f"Submission successful:\n{formatted_json}")
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error submitting stage A: {e}")
+
 def update_public_key(payload):
     try:
         conn = HTTPConnection(URL)
