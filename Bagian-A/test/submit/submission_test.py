@@ -13,7 +13,7 @@ load_dotenv()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Submit your solution")
-    parser.add_argument("--file", "-f", type=str, required=True, help="Path to the file containing the solution")
+    parser.add_argument("--file", "-f", type=str, required=False, help="Path to the file containing the solution")
     parser.add_argument("--phase", "-p", type=int, required=True, help="Phase of the submission")
     parser.add_argument("--link", "-l", type=str, required=False, help="Github link")
     args = parser.parse_args()

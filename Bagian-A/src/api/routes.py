@@ -59,7 +59,7 @@ def stage_b_submit(payload, query):
     try:
         response = requests.post(
             f"http://{URL}/stage-b/submit?username={query}", 
-            data=payload,
+            json=payload,
         )
 
         if response.status_code != 200:
