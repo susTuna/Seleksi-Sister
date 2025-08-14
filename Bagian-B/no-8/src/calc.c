@@ -6,6 +6,23 @@ static __uint128_t big_b[MAX_DIGITS];
 static __uint128_t big_result[MAX_DIGITS * 2];
 static __uint128_t len_a, len_b, len_result;
 
+int cmp_u128_compliant(__uint128_t a, __uint128_t b) {
+    __uint128_t i = MAX_BIT;
+    loop:
+    if (EQ(i, 0)) goto end;
+    i = decrement(i);
+    __uint128_t a_bit = (a >> i) & 1;
+    __uint128_t b_bit = (b >> i) & 1;
+    if (a_bit ^ b_bit) {
+        if (a_bit) return 1;
+        if (b_bit) return -1;
+    }
+    goto loop;
+
+    end:
+    return 0;
+}
+
 __uint128_t cla_add(__uint128_t a, __uint128_t b) {
     __uint128_t sum = a ^ b;
     __uint128_t carry = (a & b) << 1;

@@ -20,6 +20,7 @@
 #define DIGIT_MASK (((__uint128_t)1 << BASE_SIZE) - 1)
 #define MAX_DIGITS 2048
 
+int cmp_u128_compliant(__uint128_t a, __uint128_t b);
 __uint128_t increment(__uint128_t i);
 __uint128_t decrement(__uint128_t i);
 __uint128_t cla_add(__uint128_t a, __uint128_t b);
